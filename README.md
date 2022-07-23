@@ -1,5 +1,7 @@
 # Dialogflow State Handler
 
+== **NOTE** This project has only recently begun development and should not be used yet. ==
+
 This project is a modification of the [dialogflow-fulfillment package](https://github.com/dialogflow/dialogflow-fulfillment-nodejs#readme) with the aim of fixing two main problems.
 
 1. Patching bugs and issues from the original package that were not completed when the library became unmaintained.
