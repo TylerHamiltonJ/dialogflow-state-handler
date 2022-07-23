@@ -8,7 +8,7 @@ This project is a modification of the [dialogflow-fulfillment package](https://g
 ## Dialogflow Fulfillment Library
 The [Dialogflow Fulfillment Library](https://dialogflow.com/docs/fulfillment) allows you to connect natural language understanding and processing to your own systems, APIs, and databases. Using Fulfillment, you can surface commands and information from your services to your users through a natural conversational interface.
 
-Dialogflow Fulfillment makes creating fulfillment for Dialogflow v2 agents for 8 chat and voice platforms on Node.js easy and simple.
+Dialogflow Fulfillment makes creating fulfillment for Dialogflow v1 and v2 agents for 8 chat and voice platforms on Node.js easy and simple.
 
 ![fulfillment library works with 8 platforms](https://raw.githubusercontent.com/dialogflow/dialogflow-fulfillment-nodejs/master/dialogflow-fulfillment-graphic.png "Dialogflow's fulfillment library works with 8 platforms")
 

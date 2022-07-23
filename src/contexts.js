@@ -39,7 +39,7 @@ class Context {
    * context.set('another context name', 5, {param: 'value'})
    * context.delete('name of context') // set context lifespan to 0
    *
-   * @param {Object} inputContexts input contexts of a v2 webhook request
+   * @param {Object} inputContexts input contexts of a v1 or v2 webhook request
    * @param {string} session for a v2 webhook request & response
    */
   constructor(inputContexts, session) {
@@ -53,6 +53,9 @@ class Context {
     if (inputContexts && session) {
       this.inputContexts = this._processV2InputContexts(inputContexts);
       this.contexts = this._processV2InputContexts(inputContexts);
+    } else if (inputContexts) {
+      this.contexts = this._processV1InputContexts(inputContexts);
+      this.inputContexts = this._processV1InputContexts(inputContexts);
     }
   }
   // ---------------------------------------------------------------------------
@@ -81,7 +84,7 @@ class Context {
       name = name['name'];
     }
     if (!this.contexts[name]) {
-      this.contexts[name] = { name: name };
+      this.contexts[name] = {name: name};
     }
     if (lifespan !== undefined && lifespan !== null) {
       this.contexts[name].lifespan = lifespan;
@@ -174,7 +177,7 @@ class Context {
    */
   _processV1InputContexts(v1InputContexts) {
     let contexts = {};
-    for (let index = 0; index < v1InputContexts.length; index++) {
+    for (let index = 0; index<v1InputContexts.length; index++) {
       const context = v1InputContexts[index];
       contexts[context['name']] = {
         name: context['name'],
@@ -194,14 +197,13 @@ class Context {
    */
   _processV2InputContexts(v2InputContexts) {
     let contexts = {};
-    for (let index = 0; index < v2InputContexts.length; index++) {
+    for (let index = 0; index<v2InputContexts.length; index++) {
       let context = v2InputContexts[index];
       const name = context['name'].split('/')[6];
       contexts[name] = {
         name: name,
         lifespan: context['lifespanCount'],
-        parameters: context['parameters']
-      };
+        parameters: context['parameters']};
     }
     return contexts;
   }
@@ -219,7 +221,7 @@ class Context {
         _.isEqual(ctx, this.inputContexts[ctx.name])) {
         continue;
       }
-      let v1Context = { name: ctx.name };
+      let v1Context = {name: ctx.name};
       if (ctx.lifespan !== undefined) {
         v1Context['lifespan'] = ctx.lifespan;
       }
@@ -244,7 +246,7 @@ class Context {
         _.isEqual(ctx, this.inputContexts[ctx.name])) {
         continue;
       }
-      let v2Context = { name: `${this.session}/contexts/${ctx.name}` };
+      let v2Context = {name: `${this.session}/contexts/${ctx.name}`};
       if (ctx.lifespan !== undefined) {
         v2Context['lifespanCount'] = ctx.lifespan;
       }

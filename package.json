@@ -1,8 +1,8 @@
 {
-  "name": "dialogflow-fulfillment",
+  "name": "dialogflow-state-handler",
   "description": "Dialogflow Fulfillment Library for Node.js",
   "main": "src/dialogflow-fulfillment.js",
-  "version": "0.6.2",
+  "version": "0.1.0",
   "license": "Apache-2.0",
   "author": "tylerhamiltonj",
   "directories": {

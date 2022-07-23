@@ -248,6 +248,34 @@ class ResponseMock {
   }
 }
 
+const mockSimulatorV1Request = {
+  id: '2b3b2324-672e-4e2f-880f-8c987fdf9b4f',
+  timestamp: '2018-01-09T23:06:18.858Z',
+  lang: 'en',
+  result: {
+    source: 'agent',
+    resolvedQuery: 'webhook',
+    speech: '',
+    action: '',
+    actionIncomplete: false,
+    parameters: {},
+    contexts: [],
+    metadata: {
+      intentId: 'a59d982d-6556-4049-a460-6d5b1a2e5fd6',
+      webhookUsed: 'true',
+      webhookForSlotFillingUsed: 'false',
+      intentName: 'webhook',
+    },
+    fulfillment: {
+      speech: 'webhook failed',
+      messages: [{type: 0, speech: 'webhook failed'}],
+    },
+    score: 1,
+  },
+  status: {code: 200, errorType: 'success', webhookTimedOut: false},
+  sessionId: '30ff2e36-e068-4c86-af74-6fe3cadb3fca',
+};
+
 const mockFacebookV2RequestWebhook = {
   responseId: '45f752fe-bfcf-46c7-a546-745fadd78227',
   queryResult: {

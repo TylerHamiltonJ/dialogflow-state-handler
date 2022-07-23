@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const { debug, error, DialogflowConversation } = require('./common');
+const {debug, error, DialogflowConversation} = require('./common');
 // Response and agent classes
 const Text = require('./rich-responses/text-response');
 const Card = require('./rich-responses/card-response');
@@ -26,6 +26,7 @@ const {
   SUPPORTED_PLATFORMS,
   SUPPORTED_RICH_MESSAGE_PLATFORMS,
 } = require('./rich-responses/rich-response');
+const V1Agent = require('./v1-agent');
 const V2Agent = require('./v2-agent');
 
 const RESPONSE_CODE_BAD_REQUEST = 400;
@@ -71,7 +72,7 @@ class WebhookClient {
     this.response_ = options.response;
 
     /**
-     * The agent version based on Dialogflow webhook request
+     * The agent version (v1 or v2) based on Dialogflow webhook request
      * https://dialogflow.com/docs/reference/v2-comparison
      * @type {number}
      */
@@ -220,9 +221,11 @@ class WebhookClient {
 
     if (this.agentVersion === 2) {
       this.client = new V2Agent(this);
+    } else if (this.agentVersion === 1) {
+      this.client = new V1Agent(this);
     } else {
       throw new Error(
-        'Invalid or unknown request type (not a Dialogflow v2 webhook request).'
+        'Invalid or unknown request type (not a Dialogflow v1 or v2 webhook request).'
       );
     }
     debug(`Webhook request version ${this.agentVersion}`);
@@ -241,7 +244,7 @@ class WebhookClient {
    */
   add(responses) {
     if (responses instanceof Array) {
-      responses.forEach((singleResponse) => this.addResponse_(singleResponse));
+      responses.forEach( (singleResponse) => this.addResponse_(singleResponse) );
     } else {
       this.addResponse_(responses);
     }
@@ -301,7 +304,7 @@ class WebhookClient {
       this.response_
         .status(RESPONSE_CODE_BAD_REQUEST)
         .status('handleRequest argument must be a function or map of intent names to functions');
-      return Promise.reject(new Error(
+      return Promise.reject( new Error(
         'handleRequest argument must be a function or map of intent names to functions'
       ));
     }
@@ -430,7 +433,7 @@ class WebhookClient {
    */
   setFollowupEvent(event) {
     if (typeof event === 'string') {
-      event = { name: event };
+      event = {name: event};
     } else if (typeof event.name !== 'string' || !event.name) {
       throw new Error('Followup event must be a string or have a name string');
     }
@@ -557,4 +560,4 @@ class WebhookClient {
   }
 }
 
-module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload };
+module.exports = {WebhookClient, Text, Card, Image, Suggestion, Payload};
