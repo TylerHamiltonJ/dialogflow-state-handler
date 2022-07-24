@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const {debug, error, DialogflowConversation} = require('./common');
+const { debug, error, DialogflowConversation } = require('./common');
 // Response and agent classes
 const Text = require('./rich-responses/text-response');
 const Card = require('./rich-responses/card-response');
@@ -28,6 +28,7 @@ const {
 } = require('./rich-responses/rich-response');
 const V1Agent = require('./v1-agent');
 const V2Agent = require('./v2-agent');
+const { renderStatement } = require("./variableRenderer")
 
 const RESPONSE_CODE_BAD_REQUEST = 400;
 
@@ -48,6 +49,8 @@ class WebhookClient {
    * @param {Object} options JSON configuration.
    * @param {Object} options.request Express HTTP request object.
    * @param {Object} options.response Express HTTP response object.
+   * @param {Object} options.views A JSON object of a response file (optional).
+   * @param {any} options.variables A file containing speech variables.
    */
   constructor(options) {
     if (!options.request) {
@@ -70,6 +73,8 @@ class WebhookClient {
      * @type {Object}
      */
     this.response_ = options.response;
+    this.views = options.views
+    this.variables = options.variables
 
     /**
      * The agent version (v1 or v2) based on Dialogflow webhook request
@@ -244,10 +249,36 @@ class WebhookClient {
    */
   add(responses) {
     if (responses instanceof Array) {
-      responses.forEach( (singleResponse) => this.addResponse_(singleResponse) );
+      responses.forEach((singleResponse) => this.addResponse_(singleResponse));
     } else {
       this.addResponse_(responses);
     }
+  }
+
+  /**
+   * Add a response or list of responses to be sent to Dialogflow
+   *
+   * @param {string} response (string) the key of the response
+   * @param {string|null} state (string) or single responses
+   */
+  reply(response, state) {
+    const randomArray = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const views = this.views;
+    if (!views) {
+      throw new Error("No views file added.")
+    }
+    const responseArr = views[response];
+    const chosenReply = randomArray(responseArr);
+    if (!chosenReply) {
+      throw new Error("Specified key does not exist in views.")
+    }
+    if (!this.variables) {
+      this.addResponse_(chosenReply);
+    } else {
+      const renderedMessage = renderStatement(chosenReply, this, this.variables);
+      this.addResponse_(renderedMessage);
+    }
+    this.state = state;
   }
 
   /**
@@ -304,7 +335,7 @@ class WebhookClient {
       this.response_
         .status(RESPONSE_CODE_BAD_REQUEST)
         .status('handleRequest argument must be a function or map of intent names to functions');
-      return Promise.reject( new Error(
+      return Promise.reject(new Error(
         'handleRequest argument must be a function or map of intent names to functions'
       ));
     }
@@ -433,7 +464,7 @@ class WebhookClient {
    */
   setFollowupEvent(event) {
     if (typeof event === 'string') {
-      event = {name: event};
+      event = { name: event };
     } else if (typeof event.name !== 'string' || !event.name) {
       throw new Error('Followup event must be a string or have a name string');
     }
@@ -560,4 +591,4 @@ class WebhookClient {
   }
 }
 
-module.exports = {WebhookClient, Text, Card, Image, Suggestion, Payload};
+module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload };
