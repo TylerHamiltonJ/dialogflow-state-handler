@@ -23,8 +23,6 @@ const executeVariables = (statement, agent, variables) => {
 
     const executedVariables = tokens
         .map((token) => {
-            console.log(variables)
-            console.log(token)
             if (!variables[token]) {
                 console.log(`WARNING: Variable ${token} does not exist.`);
                 return { [token]: "null" };
