@@ -512,7 +512,7 @@ class WebhookClient {
    * @private
    */
   send_() {
-    this.context.set("session", 99, { ...this.data });
+    this.context.set("session", 99, { ...this.data, state: this.state });
 
     const requestSource = this.requestSource;
     const messages = this.responseMessages_;
