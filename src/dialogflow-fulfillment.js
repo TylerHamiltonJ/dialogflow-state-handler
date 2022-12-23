@@ -271,6 +271,7 @@ class WebhookClient {
     if (!views) {
       throw new Error("No views file added.")
     }
+
     const responseArr = views[response];
     const chosenReply = randomArray(responseArr);
     if (!chosenReply) {
@@ -313,7 +314,16 @@ class WebhookClient {
       throw new Error(`Payload response for ${response.platform} already defined.`);
     } else if (response instanceof RichResponse) {
       this.responseMessages_.push(response);
-    } else {
+    } else if (response && response.bargeIn) {
+      const { status, rawPayload, sendAsMessage } = response.bargeIn;
+      if (status === true) {
+        let payload = new Payload(PLATFORMS.UNSPECIFIED, {
+          "barge-in": status
+        }, { rawPayload, sendAsMessage });
+        this.add(payload);
+      }
+    }
+    else {
       throw new Error(`Unknown response type: "${JSON.stringify(response)}"`);
     }
   }
@@ -603,4 +613,4 @@ class WebhookClient {
   }
 }
 
-module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload };
+module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload, RichResponse };

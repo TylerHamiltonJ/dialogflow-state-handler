@@ -24,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dialogflow/dialogflow-fulfillment-nodejs.git"
+    "url": "git+https://github.com/TylerHamiltonJ/dialogflow-state-handler.git"
   },
   "bugs": {
-    "url": "https://github.com/dialogflow/dialogflow-fulfillment-nodejs/issues"
+    "url": "https://github.com/TylerHamiltonJ/dialogflow-state-handler/issues"
   },
-  "homepage": "https://github.com/dialogflow/dialogflow-fulfillment-nodejs#readme",
+  "homepage": "https://github.com/TylerHamiltonJ/dialogflow-state-handler#readme",
   "keywords": [
     "dialogflow",
     "api.ai",
