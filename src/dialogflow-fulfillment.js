@@ -316,7 +316,7 @@ class WebhookClient {
       this.responseMessages_.push(response);
     } else if (response && response.bargeIn) {
       const { status, rawPayload, sendAsMessage } = response.bargeIn;
-      if (status === true) {
+      if (status === false) {
         let payload = new Payload(PLATFORMS.UNSPECIFIED, {
           "barge-in": status
         }, { rawPayload, sendAsMessage });
